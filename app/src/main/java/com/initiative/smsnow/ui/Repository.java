@@ -25,5 +25,11 @@ public class Repository {
   public LiveData<List<MessageEntity>> getMessages() {
     return database.messageDao().getMessages();
   }
+  public MessageEntity getMessage(String name) {
+    return database.messageDao().getMessage(name);
+  };
   public LiveData<List<UserEntity>> getUsers() {return database.messageDao().getUsers();}
+  public LiveData<List<MessageEntity>> getMessages(String name) {
+    return database.messageDao().getMessages(name);
+  }
 }

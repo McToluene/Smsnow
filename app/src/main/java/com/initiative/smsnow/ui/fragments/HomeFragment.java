@@ -1,8 +1,10 @@
 package com.initiative.smsnow.ui.fragments;
 
 
+import android.os.Build;
 import android.os.Bundle;
 
+import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
@@ -15,10 +17,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.snackbar.Snackbar;
 import com.initiative.smsnow.R;
 import com.initiative.smsnow.ui.adapters.HomeAdapter;
 import com.initiative.smsnow.ui.view.HomeView;
 import com.initiative.smsnow.ui.viewmodel.HomeViewModel;
+
+import java.util.Objects;
 
 
 /**
@@ -35,6 +41,7 @@ public class HomeFragment extends Fragment implements HomeView {
   }
 
 
+  @RequiresApi(api = Build.VERSION_CODES.M)
   @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
     // initialize view model
@@ -43,7 +50,12 @@ public class HomeFragment extends Fragment implements HomeView {
     // Inflate the layout for this fragment
     View view = inflater.inflate(R.layout.fragment_home, container, false);
     RecyclerView messagesRecycler = view.findViewById(R.id.recycler_messages_list);
-    homeAdapter = new HomeAdapter(getContext(), this);
+    FloatingActionButton fab = view.findViewById(R.id.fab);
+    fab.setColorFilter(Objects.requireNonNull(getActivity()).getColor(R.color.colorPrimaryDark));
+    fab.setOnClickListener(v -> Snackbar.make(v, "Replace with your own action", Snackbar.LENGTH_LONG)
+            .setAction("Action", null).show());
+
+    homeAdapter = new HomeAdapter(Objects.requireNonNull(getActivity()).getApplication(), this);
     messagesRecycler.setAdapter(homeAdapter);
     observeMessages();
     messagesRecycler.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -60,7 +72,7 @@ public class HomeFragment extends Fragment implements HomeView {
 
   @Override
   public void loadMessage(String uniqueAddress, View view) {
-    HomeFragmentDirections.ActionHomeFragmentToReadFragment action = HomeFragmentDirections.actionHomeFragmentToReadFragment(uniqueAddress);
+    HomeFragmentDirections.ActionHomeFragmentToReadFragment action = HomeFragmentDirections.actionHomeFragmentToReadFragment(uniqueAddress).setUniqueAddress(uniqueAddress);
     Navigation.findNavController(view).navigate(action);
   }
 }

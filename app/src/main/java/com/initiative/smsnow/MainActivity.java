@@ -4,10 +4,6 @@ import android.Manifest;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
-
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
@@ -40,10 +36,6 @@ public class MainActivity extends AppCompatActivity {
     checkPermission(Manifest.permission.RECEIVE_SMS, SMS_PERMISSION_REQUEST_CODE);
     checkPermission(Manifest.permission.READ_CONTACTS, CONTACT_PERMISSION_REQUEST_CODE );
 
-    FloatingActionButton fab = findViewById(R.id.fab);
-    fab.setColorFilter(getColor(R.color.colorPrimaryDark));
-    fab.setOnClickListener(view -> Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-            .setAction("Action", null).show());
 
     NavController controller = Navigation.findNavController(this, R.id.nav_host_fragment);
   }
@@ -94,7 +86,6 @@ public class MainActivity extends AppCompatActivity {
       } else {
         Toast.makeText(this, "Contact Permission Denied", Toast.LENGTH_SHORT).show();
       }
-
     }
   }
 }

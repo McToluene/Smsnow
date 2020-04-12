@@ -19,6 +19,12 @@ public interface MessageDao {
   @Query("SELECT * FROM messageentity")
   LiveData<List<MessageEntity>> getMessages();
 
+  @Query("SELECT * FROM messageentity WHERE senderName =:name ORDER BY date DESC LIMIT 1")
+  MessageEntity getMessage(String name);
+
+  @Query("SELECT * FROM messageentity WHERE senderName =:name ORDER BY date ASC ")
+  LiveData<List<MessageEntity>> getMessages(String name);
+
   @Query("SELECT * FROM userentity")
   LiveData<List<UserEntity>> getUsers();
 

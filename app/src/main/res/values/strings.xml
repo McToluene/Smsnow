@@ -4,4 +4,8 @@
 
   <!-- TODO: Remove or change this placeholder text -->
   <string name="hello_blank_fragment">Hello blank fragment</string>
+  <string name="text_message">Text message</string>
+  <string name="send_button">Send Button</string>
+  <string name="message_count">%1$d</string>
+  <string name="message_count_page">%1$d(%2$d)</string>
 </resources>

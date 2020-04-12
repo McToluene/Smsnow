@@ -22,7 +22,7 @@
       android:name="com.initiative.smsnow.ui.fragments.ComposeFragment"
       android:label="fragment_compose"
       tools:layout="@layout/fragment_compose" />
-  <fragment
+   <fragment
       android:id="@+id/readFragment"
       android:name="com.initiative.smsnow.ui.fragments.ReadFragment"
       android:label="fragment_read"

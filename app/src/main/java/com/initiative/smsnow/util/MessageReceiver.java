@@ -6,8 +6,6 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.telephony.SmsMessage;
-import android.util.Log;
-import android.widget.Toast;
 
 import androidx.annotation.RequiresApi;
 
@@ -15,6 +13,7 @@ import com.initiative.smsnow.db.AppDatabase;
 import com.initiative.smsnow.db.model.MessageEntity;
 import com.initiative.smsnow.db.model.UserEntity;
 
+import java.sql.Date;
 import java.util.Objects;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -32,7 +31,7 @@ public class MessageReceiver extends BroadcastReceiver {
     // Get the SMS message.
     Bundle bundle = intent.getExtras();
     SmsMessage[] msgs;
-//    StringBuilder strMessage = new StringBuilder();
+
     String format = bundle != null ? bundle.getString("format") : null;
 
     // Retrieve the SMS message received.
@@ -48,10 +47,11 @@ public class MessageReceiver extends BroadcastReceiver {
   private void saveMessage(Context context, SmsMessage msg) {
     final AppDatabase database = AppDatabase.getInstance(context.getApplicationContext());
     final MessageEntity entity = new MessageEntity();
-    UserEntity userEntity = new UserEntity();
-    userEntity.name =  msg.getOriginatingAddress();
+    UserEntity userEntity = new UserEntity(Objects.requireNonNull(msg.getOriginatingAddress()));
+
     entity.senderName = msg.getOriginatingAddress();
     entity.messageBody = msg.getDisplayMessageBody();
+    entity.date = new Date(msg.getTimestampMillis());
 
     executorService.execute(() -> database.messageDao().insert(entity));
     executorService.execute(() -> {database.messageDao().insertUser(userEntity);});

@@ -5,6 +5,7 @@ import androidx.room.PrimaryKey;
 
 import java.sql.Date;
 
+
 @Entity
 public class MessageEntity {
   @PrimaryKey(autoGenerate = true)
