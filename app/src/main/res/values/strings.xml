@@ -8,4 +8,5 @@
   <string name="send_button">Send Button</string>
   <string name="message_count">%1$d</string>
   <string name="message_count_page">%1$d(%2$d)</string>
+  <string name="sender_icon">Sender image icon</string>
 </resources>

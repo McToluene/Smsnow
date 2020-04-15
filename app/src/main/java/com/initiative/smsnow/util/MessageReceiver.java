@@ -14,6 +14,7 @@ import com.initiative.smsnow.db.model.MessageEntity;
 import com.initiative.smsnow.db.model.UserEntity;
 
 import java.sql.Date;
+import java.sql.Timestamp;
 import java.util.Objects;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -51,7 +52,10 @@ public class MessageReceiver extends BroadcastReceiver {
 
     entity.senderName = msg.getOriginatingAddress();
     entity.messageBody = msg.getDisplayMessageBody();
+    entity.type = 0;
     entity.date = new Date(msg.getTimestampMillis());
+//    Timestamp timestamp = new Timestamp(msg.getTimestampMillis());
+
 
     executorService.execute(() -> database.messageDao().insert(entity));
     executorService.execute(() -> {database.messageDao().insertUser(userEntity);});

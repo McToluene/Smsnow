@@ -6,13 +6,11 @@ import android.os.Bundle;
 
 import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -52,16 +50,21 @@ public class HomeFragment extends Fragment implements HomeView {
     RecyclerView messagesRecycler = view.findViewById(R.id.recycler_messages_list);
     FloatingActionButton fab = view.findViewById(R.id.fab);
     fab.setColorFilter(Objects.requireNonNull(getActivity()).getColor(R.color.colorPrimaryDark));
-    fab.setOnClickListener(v -> Snackbar.make(v, "Replace with your own action", Snackbar.LENGTH_LONG)
-            .setAction("Action", null).show());
+    fab.setOnClickListener(v -> {
+      HomeFragmentDirections.ActionHomeFragmentToReadFragment action = HomeFragmentDirections.actionHomeFragmentToReadFragment("").setUniqueAddress("");
+      Navigation.findNavController(view).navigate(action);
+    });
 
     homeAdapter = new HomeAdapter(Objects.requireNonNull(getActivity()).getApplication(), this);
     messagesRecycler.setAdapter(homeAdapter);
-    observeMessages();
     messagesRecycler.setLayoutManager(new LinearLayoutManager(getContext()));
-
-
     return view;
+  }
+
+  @Override
+  public void onResume() {
+    super.onResume();
+    observeMessages();
   }
 
   private void observeMessages() {

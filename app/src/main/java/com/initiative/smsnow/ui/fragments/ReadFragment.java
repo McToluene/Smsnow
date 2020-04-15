@@ -3,17 +3,20 @@ package com.initiative.smsnow.ui.fragments;
 
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
+import android.widget.Toast;
 
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textview.MaterialTextView;
@@ -27,16 +30,17 @@ import java.util.Objects;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class ReadFragment extends Fragment {
-
+public class ReadFragment extends Fragment implements View.OnClickListener {
 
   private ReadViewModel viewModel;
   private ReadAdapter adapter;
   private TextInputEditText newMessage;
   private MaterialTextView counter;
+  private ImageButton sendButton;
   private static int updateCount = 160;
   private static int messageCount = 0;
   private int page = 1;
+  private String addressToSendTo;
 
   public ReadFragment() {
     // Required empty public constructor
@@ -44,23 +48,30 @@ public class ReadFragment extends Fragment {
 
 
   @Override
-  public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+  public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
     // create view model
     viewModel = new ViewModelProvider(this).get(ReadViewModel.class);
     String name = ReadFragmentArgs.fromBundle(Objects.requireNonNull(getArguments())).getUniqueAddress();
-    viewModel.getMessages(name);
+    if (!TextUtils.isEmpty(name))
+      updateView(name);
 
     // Inflate the layout for this fragment
     View view = inflater.inflate(R.layout.fragment_read, container, false);
     newMessage = view.findViewById(R.id.ed_message);
     counter = view.findViewById(R.id.tv_counter);
+    sendButton = view.findViewById(R.id.btn_send);
+    sendButton.setOnClickListener(this);
 
     updateCounter();
 
     inflateView(view);
-    observeData();
     return view;
+  }
+
+  private void updateView(String name) {
+    viewModel.getMessages(name);
+    observeData();
   }
 
   private void updateCounter() {
@@ -112,6 +123,7 @@ public class ReadFragment extends Fragment {
   private void observeData() {
     viewModel.messages.observe(getViewLifecycleOwner(), messageEntities -> {
       if (messageEntities != null) {
+        addressToSendTo = messageEntities.get(0).senderName;
         adapter.setMessageEntities(messageEntities);
       }
     });
@@ -122,5 +134,20 @@ public class ReadFragment extends Fragment {
     adapter = new ReadAdapter(getContext());
     messageRecycler.setAdapter(adapter);
     messageRecycler.setLayoutManager(new LinearLayoutManager(getContext()));
+  }
+
+  @Override
+  public void onClick(View v) {
+    attemptSend();
+  }
+
+  private void attemptSend() {
+    String message = Objects.requireNonNull(newMessage.getText()).toString();
+    if (TextUtils.isEmpty(message)){
+      Toast.makeText(getContext(), "Can not send empty message", Toast.LENGTH_LONG).show();
+      return;
+    }
+
+    viewModel.sendMessage(message, addressToSendTo);
   }
 }

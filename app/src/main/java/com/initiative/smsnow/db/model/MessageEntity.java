@@ -12,6 +12,7 @@ public class MessageEntity {
   public int id;
   public String senderName;
   public String messageBody;
+  public int type; // 0 received 1 for sent
   public Date date;
 
 }

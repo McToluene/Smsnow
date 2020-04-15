@@ -10,6 +10,13 @@
       android:id="@+id/recycler_messages_list"
       android:layout_width="match_parent"
       android:layout_height="match_parent"
+      android:layout_marginStart="16dp"
+      android:layout_marginTop="16dp"
+      android:layout_marginEnd="16dp"
+      app:layout_constraintBottom_toBottomOf="parent"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toTopOf="parent"
       tools:context=".ui.fragments.HomeFragment"
       tools:listitem="@layout/message_overview_card" />
 
@@ -19,8 +26,7 @@
       android:layout_height="wrap_content"
       android:layout_gravity="bottom|end"
       android:layout_margin="@dimen/fab_margin"
-      android:tint="@color/colorPrimaryDark"
-      app:backgroundTint="@color/colorPrimary"
+      android:tint="@android:color/black"
       app:layout_constraintBottom_toBottomOf="parent"
       app:layout_constraintEnd_toEndOf="parent"
       app:layout_constraintTop_toTopOf="parent"

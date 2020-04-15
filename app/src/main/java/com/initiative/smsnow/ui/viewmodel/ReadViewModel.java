@@ -16,11 +16,14 @@ public class ReadViewModel extends AndroidViewModel {
   private Repository repository;
   public ReadViewModel(@NonNull Application application) {
     super(application);
-
     repository = Repository.getINSTANCE(application);
   }
 
   public void getMessages(String name) {
     messages = repository.getMessages(name);
+  }
+
+  public void sendMessage(String message, String addressToSendTo) {
+    repository.sendMessage(message, addressToSendTo);
   }
 }

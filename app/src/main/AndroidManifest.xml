@@ -4,7 +4,9 @@
 
   <uses-permission android:name="android.permission.SEND_SMS" />
   <uses-permission android:name="android.permission.RECEIVE_SMS" />
+  <uses-permission android:name="android.permission.READ_SMS"/>
   <uses-permission android:name="android.permission.READ_CONTACTS" />
+  <uses-permission android:name="android.permission.WRITE_SMS" />
 
   <application
       android:allowBackup="true"
@@ -39,6 +41,14 @@
     <meta-data
         android:name="preloaded_fonts"
         android:resource="@array/preloaded_fonts" />
+
+<!--    <receiver-->
+<!--        android:name="com.klinker.android.send_message.SentReceiver"-->
+<!--        android:taskAffinity="com.initiative.smsnow.SMS_SENT"/>-->
+
+<!--    <receiver-->
+<!--        android:name="com.klinker.android.send_message.DeliveredReceiver"-->
+<!--        android:taskAffinity="com.initiative.smsnow.SMS_DELIVERED"/>-->
   </application>
 
 </manifest>

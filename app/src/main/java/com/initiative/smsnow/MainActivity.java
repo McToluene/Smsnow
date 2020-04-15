@@ -17,12 +17,14 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity {
-  private static final int SMS_PERMISSION_REQUEST_CODE = 200;
-  private static final int CONTACT_PERMISSION_REQUEST_CODE = 300;
-//  private static final String[] permissionArray = {Manifest.permission.RECEIVE_SMS, Manifest.permission.SEND_SMS, Manifest.permission.READ_CONTACTS};
+  private final static int REQUEST_CODE_ASK_PERMISSIONS = 1;
+  private static String[] permissions = {Manifest.permission.RECEIVE_SMS,  Manifest.permission.SEND_SMS, Manifest.permission.READ_SMS, Manifest.permission.READ_CONTACTS};
 
   @RequiresApi(api = Build.VERSION_CODES.M)
   @Override
@@ -33,10 +35,7 @@ public class MainActivity extends AppCompatActivity {
     setSupportActionBar(toolbar);
     Objects.requireNonNull(getSupportActionBar()).setTitle("Messaging");
 
-    checkPermission(Manifest.permission.RECEIVE_SMS, SMS_PERMISSION_REQUEST_CODE);
-    checkPermission(Manifest.permission.READ_CONTACTS, CONTACT_PERMISSION_REQUEST_CODE );
-
-
+    checkPermissions();
     NavController controller = Navigation.findNavController(this, R.id.nav_host_fragment);
   }
 
@@ -62,29 +61,39 @@ public class MainActivity extends AppCompatActivity {
     return super.onOptionsItemSelected(item);
   }
 
-  private void checkPermission(String permission, int requestCode) {
-    if (ContextCompat.checkSelfPermission(MainActivity.this, permission) == PackageManager.PERMISSION_DENIED) {
-      ActivityCompat.requestPermissions(MainActivity.this, new String[] {permission}, requestCode);
+
+  protected void checkPermissions() {
+    final List<String> missingPermissions = new ArrayList<String>();
+    // check all required dynamic permissions
+    for (final String permission : permissions) {
+      final int result = ContextCompat.checkSelfPermission(this, permission);
+      if (result != PackageManager.PERMISSION_GRANTED) {
+        missingPermissions.add(permission);
+      }
+    }
+    if (!missingPermissions.isEmpty()) {
+      // request all missing permissions
+      final String[] permissions = missingPermissions.toArray(new String[missingPermissions.size()]);
+      ActivityCompat.requestPermissions(this, permissions, REQUEST_CODE_ASK_PERMISSIONS);
     } else {
-      Toast.makeText(MainActivity.this, "Permission already granted", Toast.LENGTH_LONG).show();
+      final int[] grantResults = new int[permissions.length];
+      Arrays.fill(grantResults, PackageManager.PERMISSION_GRANTED);
+      onRequestPermissionsResult(REQUEST_CODE_ASK_PERMISSIONS, permissions, grantResults);
     }
   }
 
   @Override
   public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
     super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-
-    if (requestCode == SMS_PERMISSION_REQUEST_CODE){
-      if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-        Toast.makeText(MainActivity.this, "SMS Permission Granted", Toast.LENGTH_SHORT).show();
-      } else {
-        Toast.makeText(MainActivity.this, "SMS Permission Denied", Toast.LENGTH_SHORT).show();
-      }
-    } else if(requestCode == CONTACT_PERMISSION_REQUEST_CODE){
-      if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-        Toast.makeText(this, "Contact Permission Granted", Toast.LENGTH_SHORT).show();
-      } else {
-        Toast.makeText(this, "Contact Permission Denied", Toast.LENGTH_SHORT).show();
+    if (requestCode == REQUEST_CODE_ASK_PERMISSIONS) {
+      for (int index = permissions.length - 1; index >= 0; --index) {
+        if (grantResults[index] != PackageManager.PERMISSION_GRANTED) {
+          // exit the app if one permission is not granted
+          Toast.makeText(this, "Required permission '" + permissions[index]
+                  + "' not granted, exiting", Toast.LENGTH_LONG).show();
+          finish();
+          return;
+        }
       }
     }
   }
