@@ -36,7 +36,6 @@ public class ReadFragment extends Fragment implements View.OnClickListener {
   private ReadAdapter adapter;
   private TextInputEditText newMessage;
   private MaterialTextView counter;
-  private ImageButton sendButton;
   private static int updateCount = 160;
   private static int messageCount = 0;
   private int page = 1;
@@ -60,7 +59,7 @@ public class ReadFragment extends Fragment implements View.OnClickListener {
     View view = inflater.inflate(R.layout.fragment_read, container, false);
     newMessage = view.findViewById(R.id.ed_message);
     counter = view.findViewById(R.id.tv_counter);
-    sendButton = view.findViewById(R.id.btn_send);
+    ImageButton sendButton = view.findViewById(R.id.btn_send);
     sendButton.setOnClickListener(this);
 
     updateCounter();

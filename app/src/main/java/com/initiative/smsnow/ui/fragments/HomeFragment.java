@@ -51,8 +51,7 @@ public class HomeFragment extends Fragment implements HomeView {
     FloatingActionButton fab = view.findViewById(R.id.fab);
     fab.setColorFilter(Objects.requireNonNull(getActivity()).getColor(R.color.colorPrimaryDark));
     fab.setOnClickListener(v -> {
-      HomeFragmentDirections.ActionHomeFragmentToReadFragment action = HomeFragmentDirections.actionHomeFragmentToReadFragment("").setUniqueAddress("");
-      Navigation.findNavController(view).navigate(action);
+      Navigation.findNavController(view).navigate(R.id.action_homeFragment_to_composeFragment);
     });
 
     homeAdapter = new HomeAdapter(Objects.requireNonNull(getActivity()).getApplication(), this);
